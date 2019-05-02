@@ -1,0 +1,726 @@
+<!doctype html>
+<html lang="en" prefix="og: http://ogp.me/ns#">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Docker by Rhys Laval</title>
+	<meta name="description"
+	      content="Showing (and hopefully playing with) the basics of Docker, Docker Compose and Kubernetes.">
+	<link href="https://fonts.googleapis.com/css?family=Roboto:100,100i,300,300i,400,400i,700,700i%7CMaitree:200,300,400,600,700&amp;subset=latin-ext"
+	      rel="stylesheet">
+
+	<link rel="stylesheet" type='text/css' media='all' href="static/css/webslides.css">
+	<link rel="stylesheet" type='text/css' media='all' href="static/css/svg-icons.css">
+
+	<style>
+		.flexblock.gallery li figcaption:before {
+			display: none;
+		}
+	</style>
+
+</head>
+<body>
+
+<main role="main">
+	<article id="webslides" class="vertical">
+		<!-- Quick Guide
+		  - Each parent <section> in the <article id="webslides"> element is an individual slide.
+		  - Vertical sliding = <article id="webslides" class="vertical">
+		  - <div class="wrap"> = container 90% / <div class="wrap size-50"> = 45%;
+		-->
+
+		<section>
+			<span class="background" style="background:#def2f9"></span>
+			<!--.wrap = container (width: 90%) -->
+			<div class="wrap aligncenter">
+				<img src="static/images/docker.png" style="width: 30%;">
+				<p class="text-intro">Showing (and hopefully playing with) the basics <br>
+					of Containers, Docker and Docker Compose.
+				</p>
+			</div>
+			<!-- .end .wrap -->
+		</section>
+		<section class="slide-bottom">
+			<div class="wrap">
+				<div class="content-right text-serif">
+					<h2><strong>Prerequisites</strong></h2>
+					<p class="text-intro">
+						<a target="_blank" title="Docker" href="https://www.docker.com/products/docker-desktop">
+							Docker
+						</a>
+					</p>
+				</div>
+				<!-- .end .content-right -->
+			</div>
+			<!-- .end .wrap -->
+		</section>
+		<section class="aligncenter">
+			<!-- .wrap = container (width: 90%) -->
+			<div class="wrap">
+				<h2><strong>Google</strong></h2>
+				<p class="text-intro"><b>"Everything at Google runs in a container"<br>"We start over two billion
+					containers per week"</b><br>thats 3,300 containers a second,<br>thats 10,000 since you started
+					reading this slide.<br>Joe Beda, a senior staff software engineer from 2013</p>
+			</div>
+			<!-- .end .wrap -->
+		</section>
+		<section>
+			<!--.wrap = container (width: 90%) -->
+			<div class="wrap size-50 aligncenter">
+				<h2><strong>Why Containerisation?</strong></h2>
+				<p class="text-intro">Containerisation is increasingly popular because containers are:</p>
+				<div class="bg-white shadow">
+					<ul class="flexblock">
+						<li>
+							<h2>Flexible</h2>
+							<p>Even the most complex applications can be containerized.</p>
+						</li>
+						<li>
+							<h2>Lightweight</h2>
+							<p>Containers leverage and share the host kernel.</p>
+						</li>
+						<li>
+							<h2>Interchangeable</h2>
+							<p>You can deploy updates and upgrades on-the-fly.</p>
+						</li>
+						<li>
+							<h2>Portable</h2>
+							<p>You can build locally, deploy to the cloud, and run anywhere.</p>
+						</li>
+						<li>
+							<h2>Scalable</h2>
+							<p>You can increase and automatically distribute container replicas.</p>
+						</li>
+						<li>
+							<h2>Secure</h2>
+							<p>Generally, containers have a smaller possible attack space.</p>
+						</li>
+					</ul>
+				</div>
+				<!-- .end .bg-white shadow -->
+			</div>
+			<!-- .end .wrap -->
+		</section>
+		<section>
+			<span class="background" style="background:white"></span>
+			<!--.wrap = container (width: 90%) -->
+			<div class="wrap aligncenter">
+				<img src="static/images/comparison.jpg" style="max-width: 75%;">
+				</p>
+			</div>
+			<!-- .end .wrap -->
+		</section>
+		<section>
+			<!--.wrap = container (width: 90%) -->
+			<div class="wrap aligncenter">
+				<h2><strong>How?</strong></h2>
+				<p class="text-intro">Using simple linux namespaces to provide containers resources in a sandboxed
+					method.<br>There are 6 namespaces (these have mostly existed in the kernal for tweo decades!):</p>
+				<div class="bg-white shadow">
+					<ul class="flexblock">
+						<li>
+							<h2>PID namespace</h2>
+							<p>provides a master container process and all processes are joined to this.</p>
+						</li>
+						<li>
+							<h2>Mount namespace</h2>
+							<p>gives functionality for each container to have different folders.</p>
+						</li>
+						<li>
+							<h2>UTS namespace</h2>
+							<p>gives its processes their own view of the hostname and domain name.</p>
+						</li>
+						<li>
+							<h2>Network namespace</h2>
+							<p>Gives the processes that use it their own network stack.</p>
+						</li>
+						<li>
+							<h2>IPC namespace</h2>
+							<p>isolates various inter-process communication mechanisms such as message queues.</p>
+						</li>
+						<li>
+							<h2>User namespace</h2>
+							<p>maps the uids a process sees to a different set of uids (and gids) on the host.</p>
+						</li>
+					</ul>
+				</div>
+				<!-- .end .bg-white shadow -->
+			</div>
+			<!-- .end .wrap -->
+		</section>
+		<section class="aligncenter">
+			<!-- .wrap = container (width: 90%) -->
+			<div class="wrap">
+				<p class="text-intro">Docker written in bash under 100 lines! See <a
+						href="https://github.com/p8952/bocker/">github.com/p8952/bocker</a>.<br> More information on how
+					the internals of Docker works <a
+							href="https://www.infoq.com/articles/build-a-container-golang">here</a>.</p>
+			</div>
+			<!-- .end .wrap -->
+		</section>
+		<section>
+			<div class="wrap">
+				<h2>Docker Concepts</h2>
+				<ul class="flexblock features">
+					<li>
+						<div>
+							<h2>
+								Images
+							</h2>
+							are created via Dockerfiles which can be pulled from a "Container Registry" an example is
+							Docker Hub which has lots of public images
+						</div>
+					</li>
+					<li>
+						<div>
+							<h2>
+								Image Layers
+							</h2>
+							are generated when the commands are run from in the Dockerfile
+						</div>
+					</li>
+					<li>
+						<div>
+							<h2>
+								Container
+							</h2>
+							a running container created from an image
+						</div>
+					</li>
+					<li>
+						<div>
+							<h2>
+								Networks
+							</h2>
+							a docker network is a seperate network within the docker system
+						</div>
+					</li>
+					<li>
+						<div>
+							<h2>
+								Volumnes
+							</h2>
+							are similar to mounting a folder within the container
+						</div>
+					</li>
+					<li>
+						<div>
+							<h2>
+								Docker Compose
+							</h2>
+							is a descriptive way of having a multi-container setup which can include volumnes, setup and
+							networks. It is a Orchestration tool.
+						</div>
+					</li>
+				</ul>
+			</div>
+		</section>
+		<section>
+			<!--.wrap = container (width: 90%) -->
+			<div class="wrap">
+				<div class="grid vertical-align">
+					<div class="column">
+						<h3><strong>So the basic's</strong></h3>
+						<p class="text-intro">Lets test docker is setup on your machine and that you can load a simple
+							container.</p>
+
+						<p class="text-intro">Here we are pulling the hello-world container from Docker Hub</p>
+
+						<p>You can see it on Docker hub <a href="https://hub.docker.com/_/hello-world">here</a>.</p>
+					</div>
+					<!-- .end .column -->
+					<div class="column">
+                <pre><b>$ docker -v</b>
+Docker version 18.09.2, build 6247962
+
+<b>$ docker run hello-world</b>
+Unable to find image 'hello-world:latest' locally
+latest: Pulling from library/hello-world
+1b930d010525: Pull complete 
+Digest: sha256:92695bc579f31df7a63da6922075d0666e565cec...
+Status: Downloaded newer image for hello-world:latest
+
+Hello from Docker!
+This message shows that your installation appears to be working correctly.
+...
+
+<b>$ docker image ls</b>
+REPOSITORY  TAG      IMAGE ID       CREATED         SIZE
+hello-world latest   fce289e99eb9   3 months ago    1.84kB
+</pre>
+					</div>
+					<!-- .end .column -->
+				</div>
+				<!-- .end .grid -->
+			</div>
+			<!-- .end .wrap -->
+		</section>
+		<section>
+			<!--.wrap = container (width: 90%) -->
+			<div class="wrap">
+				<div class="grid vertical-align">
+					<div class="column">
+						<h3><strong>Dockerfile</strong></h3>
+						<p>Docker can build images automatically by reading the instructions from a Dockerfile. A
+							Dockerfile is a text document that contains all the commands a user could call on the
+							command line to assemble an image.</p>
+
+						<h3><strong>Lets create a simple container</strong></h3>
+						<p>We'll create a similar container to the one used previously.<br>
+							Create a Dockerfile with the contents shown.<br>
+							We then build and run this, here we are using the hash of the container.<br>
+							Although tagging the created container allows you to reference this container later as
+							shown.</p>
+					</div>
+					<!-- .end .column -->
+					<div class="column">
+                <pre><b># from helloworld/Dockerfile</b>
+FROM alpine
+CMD ["echo", "Hello World"]
+
+<b>$ docker build .</b>
+Sending build context to Docker daemon   38.4kB
+Step 1/2 : FROM alpine
+ ---> cdf98d1859c1
+Step 2/2 : CMD ["echo", " Hello World"]
+ ---> Running in cd305906eafa
+Removing intermediate container cd305906eafa
+ ---> 273a4890c72a
+Successfully built 273a4890c72a
+
+<b>$ docker run 273a4890c72a</b>
+Hello World
+
+<b>$ docker build -t helloworld . && docker run helloworld</b>
+# Building output (removed!)
+Hello World
+</pre>
+					</div>
+					<!-- .end .column -->
+				</div>
+				<!-- .end .grid -->
+			</div>
+			<!-- .end .wrap -->
+		</section>
+		<section>
+			<!--.wrap = container (width: 90%) -->
+			<div class="wrap">
+				<div class="grid vertical-align">
+					<div class="column">
+						<h3><strong>Image</strong></h3>
+						<p class="text-intro">An image is a collection of layers. Each layer is a instruction from the Dockerfile but what is recorded per layer is the change in the file system the command has actioned. This allows for caching if no changes are due.</p>
+					</div>
+					<!-- .end .column -->
+					<div class="column">
+                <pre><b>$ docker image ls helloworld </b>
+
+REPOSITORY     TAG        IMAGE ID            CREATED             SIZE
+helloworld     latest     273a4890c72a        13 minutes ago      5.53MB
+
+<b>$ docker history helloworld</b>
+
+IMAGE         CREATED     CREATED BY                             SIZE
+273a489..  13 minutes ago /bin/sh CMD ["echo" " Hello World…   0B
+cdf98d1..  2 weeks ago    /bin/sh CMD ["/bin/sh"]              0B
+&#x3C;missing&#x3E;  2 weeks ago    /bin/sh ADD file:2e3a37883f56a4a27…   5.53MB
+</pre>
+					</div>
+					<!-- .end .column -->
+				</div>
+				<!-- .end .grid -->
+			</div>
+			<!-- .end .wrap -->
+		</section>
+		<section>
+			<div class="wrap">
+				<h2><strong>Dockerfile Syntax</strong></h2>
+				<p>See more a more in-depth document <a
+						href="https://docs.docker.com/engine/reference/builder/">here</a>.</p>
+				<ul class="flexblock gallery">
+					<li>
+						<figcaption><h2>Inheritance</h2></figcaption>
+						<pre>FROM php:7.2</pre>
+
+						<figcaption><h2>Commands</h2></figcaption>
+						<pre>
+RUN echo Hello World
+-----
+CMD ["echo", "Hello World"]
+-----
+USER www-data
+ENTRYPOINT ["echo"]
+CMD ["Hello World"]
+						</pre>
+					</li>
+					<li>
+						<figcaption><h2>Variables</h2></figcaption>
+						<pre>
+ARG USER1=default
+ENV APP_HOME=/myapp
+RUN mkdir $APP_HOME
+						</pre>
+						<figcaption><h2>Network</h2></figcaption>
+						<pre>
+EXPOSE 5900
+						</pre>
+					</li>
+					<li>
+						<figcaption><h2>Files</h2></figcaption>
+						<pre>
+WORKDIR /myapp
+ADD file.xyz /file.xyz
+COPY --chown=user:group host_file.xyz /path/container_file.xyz
+# Always use COPY, ADD is the same as copy with extra features such as automatic un-compressing of files but this causes a clear of the cache layers following the running of the ADD.
+						</pre>
+					</li>
+				</ul>
+			</div>
+			<!-- .end .wrap -->
+		</section>
+		<section>
+			<div class="wrap">
+				<h2>Keep the images small!</h2>
+				<ul class="flexblock features">
+					<li>
+						<div>
+							<h2>
+								Think Carefully About Your Application’s Needs
+							</h2>
+							Ensure your are splitting out your application into multiple difference containers!
+						</div>
+					</li>
+					<li>
+						<div>
+							<h2>
+								Use a Small Base Image
+							</h2>
+							Use the smallest base image which is available for your needs
+						</div>
+					</li>
+					<li>
+						<div>
+							<h2>
+								Use as Few Layers As Possible
+							</h2>
+							This is linked to caching the images and ensuring you do not keep unnessary files between
+							layers.
+						</div>
+					</li>
+					<li>
+						<div>
+							<h2>
+								Use .dockerignore files
+							</h2>
+							When copying files into the container, you can ignore files to be copied via using
+							.dockerignore.
+						</div>
+					</li>
+					<li>
+						<div>
+							<h2>
+								Squash Docker Images
+							</h2>
+							This is useful when you'll be using a base wide container as a parent of other containers.
+						</div>
+					</li>
+				</ul>
+			</div>
+		</section>
+		<section>
+			<span class="background" style="background:#dbd7db"></span>
+			<!--.wrap = container (width: 90%) -->
+			<div class="wrap aligncenter">
+				<h1>Base Images</h1>
+				<img src="static/images/base-images.png" style="max-width: 75%;">
+				</p>
+			</div>
+			<!-- .end .wrap -->
+		</section>
+		<section>
+			<!--.wrap = container (width: 90%) -->
+			<div class="wrap">
+				<div class="grid vertical-align">
+					<div class="column">
+						<h3><strong>Another Hello world?</strong></h3>
+						<p class="text-intro">In the first example, we are essentially doing the same as our previous
+							example. We are running an alpine image but modifying the command on the fly.<br>Next we are
+							able to sh (a basic command line shell similar to bash) into the container. The -it
+							instructs Docker to allocate a pseudo terminal connected to the container’s stdin; creating an
+							interactive shell in the container.</p>
+					</div>
+					<!-- .end .column -->
+					<div class="column">
+                <pre><b>$ docker run alpine echo "Hello World"</b>
+
+Hello World
+
+<b>$ docker run -it alpine sh</b>
+
+<b>/ # ls</b>
+bin    dev    etc    home   lib    media  mnt    opt    proc   root   run    sbin   srv    sys    tmp    usr    var
+<b>/ # echo "Hello World"</b>
+Hello World
+<b>/ # </b>
+</pre>
+					</div>
+					<!-- .end .column -->
+				</div>
+				<!-- .end .grid -->
+			</div>
+			<!-- .end .wrap -->
+		</section>
+		<section>
+			<!--.wrap = container (width: 90%) -->
+			<div class="wrap">
+				<h3><strong>Lets bring PHP into the mix</strong></h3>
+				<div class="grid vertical-align">
+					<div class="column">
+						<pre><b># php-cli-test/cli.php</b>
+&#x3C;?php
+echo "Hello World";
+
+<b># php-cli-test/Dockerfile</b>
+FROM php:7.3
+
+COPY cli.php /var/helloworld/
+
+WORKDIR /var/helloworld
+
+CMD ["php", "cli.php"]
+</pre>
+					</div>
+					<!-- .end .column -->
+					<div class="column">
+                <pre>
+<b>$ docker build -t phpclitest . && docker run phpclitest</b>
+
+Sending build context to Docker daemon  3.072kB
+Step 1/4 : FROM php:7.3
+ ---> 750fb3e3d6ef
+Step 2/4 : COPY cli.php /var/helloworld/
+ ---> Using cache
+ ---> 528202483c1b
+Step 3/4 : WORKDIR /var/helloworld
+ ---> Using cache
+ ---> 630c3c1ee5f1
+Step 4/4 : CMD ["php", "cli.php"]
+ ---> Running in 86324a088d5e
+Removing intermediate container 86324a088d5e
+ ---> adf4ed5f7c07
+Successfully built adf4ed5f7c07
+Successfully tagged phpclitest:latest
+Hello World%
+</pre>
+					</div>
+					<!-- .end .column -->
+				</div>
+				<!-- .end .grid -->
+			</div>
+			<!-- .end .wrap -->
+		</section>
+		<section>
+			<!--.wrap = container (width: 90%) -->
+			<div class="wrap">
+				<h3><strong>And now serve it locally</strong></h3>
+				<div class="grid vertical-align">
+					<div class="column">
+						<pre><b># php-http-test/index.php</b>
+&#x3C;?php
+echo "Hello World";
+
+<b># php-http-test/Dockerfile</b>
+FROM php:7.3-apache
+
+COPY . /var/www/html/
+</pre>
+						<p>Note this example has Apache within a PHP container. Its important to follow separation of
+							concerns pattern when creating Docker images.</p>
+					</div>
+					<!-- .end .column -->
+					<div class="column">
+                <pre>
+<b>$ docker build -t phphttptest . && docker run -p 80:80 phphttptest</b>
+# Once its running, go to localhost in your browser
+...
+172.17.0.1 - - [28/Jan/2018:09:16:59 +0000] "GET / HTTP/1.1" 200 240 "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/71.0.3683.103 Safari/537.36"
+
+
+# Lets mount the directory so we can develop our index.php further
+<b>$ docker run  -v "$(pwd):/var/www/html/" -p 80:80 phphttptest</b>
+
+# now modify index.php and refresh the browser
+</pre>
+					</div>
+					<!-- .end .column -->
+				</div>
+				<!-- .end .grid -->
+			</div>
+			<!-- .end .wrap -->
+		</section>
+		<section>
+			<!--.wrap = container (width: 90%) -->
+			<div class="wrap">
+				<h3><strong>Orchestration</strong></h3>
+				<p>However a tool is still needed to:
+				<div class="bg-white shadow">
+					<ul class="flexblock">
+						<li>actually take a specification and assign containers to machines (scheduling)</li>
+						<li>actually boot the specified containers on the machines through Docker</li>
+						<li>logging output and monitoring resources</li>
+						<li>respond to failures like container crashes</li>
+						<li>deal with deployments/rollbacks/the constantly changing nature of the system</li>
+						<li>and create cluster resources like service discovery, inter VM networking (DNS), load
+							balancing, etc.
+						</li>
+					</ul>
+				</div>
+				<!-- .end .bg-white shadow -->
+			</div>
+			<!-- .end .wrap -->
+		</section>
+		<section>
+			<span class="background" style="background:#eaf5f4"></span>
+			<!--.wrap = container (width: 90%) -->
+			<div class="wrap aligncenter">
+				<img src="static/images/compose.png" style="width: 20%;">
+				<p class="text-intro">Docker Compose is Orchestration tool for local environments
+				</p>
+			</div>
+			<!-- .end .wrap -->
+		</section>
+		<section>
+			<!--.wrap = container (width: 90%) -->
+			<div class="wrap">
+				<div class="grid vertical-align">
+					<div class="column">
+						<h3><strong>docker-compose.yaml</strong></h3>
+						<p class="text-intro">The Compose file is a YAML file defining services, networks and volumes.<br>Here shows the most common options:</p>
+					</div>
+					<!-- .end .column -->
+					<div class="column">
+                <pre>version: 3
+services:
+  db:
+    image: postgres:9.4
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    expose:
+      - "3306"
+    networks:
+      - backend
+  vote:
+    container_name: 'web'
+    build:
+	  context: ./vote
+    environment:
+	  - DB_HOST=db
+    ports:
+      - "5000:80"
+    networks:
+      - frontend
+	  - backend
+    depends_on:
+      - db
+networks:
+  frontend:
+  backend:
+volumes:
+  db-data:
+</pre>
+					</div>
+					<!-- .end .column -->
+				</div>
+				<!-- .end .grid -->
+			</div>
+			<!-- .end .wrap -->
+		</section>
+		<section>
+			<span class="background"></span>
+			<!--.wrap = container (width: 90%) -->
+			<div class="wrap aligncenter">
+				<img src="static/images/compose-setup.png">
+				<p class="text-intro">
+					Next, lets create a Docker Compose setup of<br>a Nginx container and a PHP-FPM Container.
+				</p>
+			</div>
+			<!-- .end .wrap -->
+		</section>
+		<section>
+			<span class="background"></span>
+			<!--.wrap = container (width: 90%) -->
+			<div class="wrap aligncenter">
+				<h1>Lets make a simple form posting to PHP</h1>
+				<pre><b># compose-php/index.html</b>
+&#x3C;form action=&#x22;form.php&#x22; method=&#x22;post&#x22;&#x3E;What is your name? &#x3C;input type=&#x22;text&#x22; name=&#x22;name&#x22;&#x3E;&#x3C;button&#x3E;Go!&#x3C;/button&#x3E;&#x3C;/form&#x3E;
+
+<b># compose-php/form.php</b>
+&#x3C;?php
+echo 'Hello ' . $_POST['name'];
+
+<b># compose-php/site.conf</b>
+server {
+    listen         80;
+    index          index.html;
+    location ~* \.php$ {
+        fastcgi_pass php:9000;
+        include         fastcgi_params;
+        fastcgi_param   SCRIPT_FILENAME    /var/www/html/$fastcgi_script_name;
+        fastcgi_param   SCRIPT_NAME        $fastcgi_script_name;
+    }
+}
+</pre>
+			</div>
+			<!-- .end .wrap -->
+		</section>
+		<section>
+			<span class="background"></span>
+			<!--.wrap = container (width: 90%) -->
+			<div class="wrap aligncenter">
+				<pre><b># docker-compose.yaml</b>
+version: '3'
+services:
+  php:
+    image: php:7.2-fpm-alpine3.8
+    expose:
+    - 9000
+    volumes:
+    - ./:/var/www/html
+  nginx:
+    image: nginx:1.16-alpine
+    volumes:
+    - ./:/etc/nginx/html
+    - ./site.conf:/etc/nginx/conf.d/default.conf
+    ports:
+    - "80:80"
+</pre>
+			</div>
+			<!-- .end .wrap -->
+		</section>
+		<section class="slide-bottom">
+			<div class="wrap">
+				<div class="content-right text-serif">
+					<h2>
+						<strong>Any questions?</strong>
+					</h2>
+				</div>
+				<!-- .end .content-right -->
+			</div>
+			<!-- .end .wrap -->
+		</section>
+
+	</article>
+	<!-- end article -->
+</main>
+<!-- end main -->
+
+<!-- Required -->
+<script src="static/js/webslides.js"></script>
+<script>
+	window.ws = new WebSlides();
+</script>
+
+<!-- OPTIONAL - svg-icons.js (fontastic.me - Font Awesome as svg icons) -->
+<script defer src="static/js/svg-icons.js"></script>
+
+</body>
+</html>
